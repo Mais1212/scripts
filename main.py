@@ -13,9 +13,7 @@ def fix_marks(kid_name):
     if not bad_marks:
         print("Скорее всего, вы ввели имя ученика, у которого нет плохих оценок или такого имени.")
         return
-    for bad_mark in bad_marks:
-        bad_mark.points = 5
-        bad_mark.save()
+    bad_marks.update(points=5)
     print("Оценки исправлены!")
 
 
@@ -28,7 +26,7 @@ def remove_chastisements(kid_name):
     chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
     if not chastisements:
         print(
-            "Скорее всего, вы ввели имя ученика, у которого нет замечаниq.")
+            "Скорее всего, вы ввели имя ученика, у которого нет замечани.")
         return
     chastisements.delete()
     print("Замечания удалены!")
