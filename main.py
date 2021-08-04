@@ -6,7 +6,7 @@ from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
 def fix_marks(kid_name):
     bad_marks = Mark.objects.filter(
         schoolkid__full_name__contains=kid_name, points__in=[2, 3])
-    if bad_marks.count() == 0:
+    if not bad_marks:
         print("Скорее всего, вы ввели имя ученика, у которого нет плохих оценок или такого имени.")
         return
     for bad_mark in bad_marks:
@@ -18,7 +18,7 @@ def fix_marks(kid_name):
 def remove_chastisements(kid_name):
     chastisements = Chastisement.objects.filter(
         schoolkid__full_name__contains=kid_name)
-    if chastisements.count() == 0:
+    if not chastisements:
         print(
             "Скорее всего, вы ввели имя ученика, у которого нет замечания или такого имени.")
         return
@@ -29,7 +29,7 @@ def remove_chastisements(kid_name):
 def append_commendation(subject, kid_name):
     try:
         lesson = Lesson.objects.filter(
-            year_of_study=6, group_letter="А", subject__title=subject)[0]
+            year_of_study=6, group_letter="А", subject__title=subject).first()
     except IndexError:
         print("Возможно, вы ошиблись в названии предмета")
         return
