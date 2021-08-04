@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
                                Schoolkid)
 
@@ -41,7 +40,7 @@ def append_commendation(subject, kid_name):
         Commendation.objects.create(text="Ты натренировался, брат.",
                                     created=date, schoolkid=schoolkid,
                                     teacher=teacher, subject=subject)
-    except ObjectDoesNotExist:
+    except Schoolkid.DoesNotExist:
         print("Вероятно, вы ввели имя несуществующего ученика, попробуйте еще раз.")
     finally:
         print("Похвала добавлена!")
