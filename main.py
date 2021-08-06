@@ -2,17 +2,20 @@ from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
                                Schoolkid)
 
 
-def check_for_exist(kid_name):
+def get_schoolkid(kid_name):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=kid_name)
     except Schoolkid.DoesNotExist:
         print("Вероятно, вы ввели имя несуществующего ученика, попробуйте еще раз.")
         return None
+    except Schoolkid.MultipleObjectsReturned:
+        print("Найдено несколько учеников с такими ФИО, попробуйте указать полную ФИО")
+        return None
     return schoolkid
 
 
 def fix_marks(kid_name):
-    schoolkid = check_for_exist(kid_name)
+    schoolkid = get_schoolkid(kid_name)
     if schoolkid is None:
         return
     bad_marks = Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3])
@@ -26,7 +29,7 @@ def fix_marks(kid_name):
 
 
 def remove_chastisements(kid_name):
-    schoolkid = check_for_exist(kid_name)
+    schoolkid = get_schoolkid(kid_name)
     if schoolkid is None:
         return
     chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
@@ -47,7 +50,7 @@ def append_commendation(subject, kid_name):
     date = lesson.date
     teacher = lesson.teacher
     subject = lesson.subject
-    schoolkid = check_for_exist(kid_name)
+    schoolkid = get_schoolkid(kid_name)
     if schoolkid is None:
         return
     Commendation.objects.create(text="Ты натренировался, брат.",
